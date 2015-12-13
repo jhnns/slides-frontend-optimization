@@ -5,11 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="styles.css" type="text/css" rel="stylesheet">
 </head>
+<body>
 <textarea id="source">
 
     name: cover
 
-    <img src="assets/img/peerigon.svg" style="height: 5vh; margin-top: 5vh; margin-bottom: -5vh;">
+    <img src="assets/img/peerigon.svg" style="width: 30%; margin-top: 7%; margin-bottom: -7%;">
 
     # Frontend management – yesterday, today and tomorrow?
 
@@ -42,7 +43,7 @@
 
     ---
 
-    <img src="assets/img/peerigon.svg" style="height:10vh; margin-bottom: 5vh;" />
+    <img src="assets/img/peerigon.svg" style="width: 50%; margin-bottom: 5%;" />
 
     - Web Consulting Company
     - Web / Mobile Web / Hybrid / Backends
@@ -84,18 +85,18 @@
 
     ### roomieplanet.com
 
-    <img src="assets/img/roomieplanet-screenshot.jpg" style="width: 60vw;">
+    <img src="assets/img/roomieplanet-screenshot.jpg" style="width: 100%;">
 
     ---
 
-    <img src="assets/img/roomieplanet-techstats.jpg" style="position: absolute; left: 0; width: 100%; top: 20vh;">
+    <img src="assets/img/roomieplanet-techstats.jpg" style="position: absolute; left: 0; width: 100%; top: 20%;">
 
     - Server-side rendering with PHP and Smarty
     - Almost the same amount of code already on the client-side in JavaScript
 
     ---
 
-    <img src="assets/img/js.jpg" style="width: 10vw;">
+    <img src="assets/img/js.jpg" style="width: 20%;">
 
     - 273 JS files (incl. external dependencies)
     - No dependency manager (aka `vendor` directory)
@@ -105,26 +106,26 @@
 
     ---
 
-    <img src="assets/img/roomieplanet-js-repos.jpg" style="width: 50vw;">
+    <img src="assets/img/roomieplanet-js-repos.jpg" style="width: 80%;">
 
     - All JS code is split into 5 repositories each providing a `package.yaml`
 
     ---
 
-    <img src="assets/img/roomieplanet-js-annotations.jpg" style="width: 50vw;">
+    <img src="assets/img/roomieplanet-js-annotations.jpg" style="width: 90%;">
 
-    - Every file contains imports and exports
+    - Every JS file contains imports and exports
 
     ---
 
-    <img src="assets/img/roomieplanet-js-builds.jpg" style="width: 50vw;">
+    <img src="assets/img/roomieplanet-js-builds.jpg" style="width: 80%;">
 
     - `build.php` responsible for building (and caching) JS builds
     - One file for common JS code + one file per page
 
     ---
 
-    <img src="assets/img/css.jpg" style="width: 10vw;">
+    <img src="assets/img/css.jpg" style="width: 20%;">
 
     - A single `main.css` for all pages
     - No preprocessor
@@ -132,7 +133,7 @@
 
     ---
 
-    <img src="assets/img/asset-icons.jpg" style="width: 20vw">
+    <img src="assets/img/asset-icons.jpg" style="width: 40%">
 
     - No assets/file handling
     - No image compressor
@@ -159,7 +160,241 @@
 
     ## Frontend management today
 
-    TODO @jhnns
+    ---
+
+    <div style="position: absolute; left: 35%; top: 10%; width: 30%;">
+        <img src="assets/img/tools-task-runners.jpg" style="width: 100%">
+        <h3>Task Runners</h3>
+    </div>
+    <div style="position: absolute; left: 65%; top: 30%; width: 30%;">
+        <img src="assets/img/tools-css.jpg" style="width: 100%">
+        <h3>CSS Processors</h3>
+    </div>
+    <div style="position: absolute; left: 55%; top: 60%; width: 30%;">
+        <img src="assets/img/tools-html.jpg" style="width: 100%">
+        <h3>HTML Templates</h3>
+    </div>
+    <div style="position: absolute; left: 15%; top: 60%; width: 30%;">
+        <img src="assets/img/tools-js.jpg" style="width: 100%">
+        <h3>JS Transpilers</h3>
+    </div>
+    <div style="position: absolute; left: 5%; top: 30%; width: 30%;">
+        <img src="assets/img/tools-bundlers.jpg" style="width: 100%">
+        <h3>Bundlers</h3>
+    </div>
+
+    ---
+
+    <img src="assets/img/tools-task-runners.jpg" style="width: 70%">
+
+    ### Task Runners
+
+    <span style="color: grey">*Examples: Grunt, Gulp*</span>
+
+    ---
+
+    ### Task Runners
+
+    - Basically like Makefiles, but written in JS
+    - Run tasks in a predefined order
+    - Load custom tasks via NPM
+    - Tasks can be applied on a set of files ("glob")
+    - Can not understand the contents of a file
+    - Do not have a notion of dependencies
+
+    ---
+
+    <img src="assets/img/tools-css.jpg" style="width: 70%">
+
+    ### CSS Processors
+
+    <span style="color: grey">*Examples: Sass, Less, PostCSS/Autoprefixer*</span>
+
+    ---
+
+    ### CSS Processors
+
+    - Extend CSS with useful features like variables or selector nesting
+    - Provide tools to avoid repetition
+
+    ---
+
+    <img src="assets/img/tools-html.jpg" style="width: 70%">
+
+    ### HTML Templates
+
+    <span style="color: grey">*Examples: Jade, Handlebars*</span>
+
+    ---
+
+    ### HTML Templates
+
+    - Classical templating
+    - Also avoid repetition
+    - Are often shipped as two-way data binding in your client MV* framework
+
+    ---
+
+    <img src="assets/img/tools-js.jpg" style="width: 70%">
+
+    ### JS Transpilers
+
+    <span style="color: grey">*Examples: Babel, CoffeeScript*</span>
+
+    ---
+
+    ### JS Transpilers
+
+    - Compile to JS
+    - Provide custom syntax to solve specific problems more concisely
+    - "Playground" for new ECMAScript features
+
+    ---
+
+    <img src="assets/img/tools-bundlers.jpg" style="width: 70%">
+
+    ### Bundlers
+
+    <span style="color: grey">*Examples: Browserify, Webpack*</span>
+
+    ---
+
+    ### Bundlers
+
+    - Put all JS files into one or multiple "bundles" (bigger JS files)
+    - Figure out the *dependency tree* by scaning the *abstract syntax tree (AST)* for dependencies
+
+    ---
+
+    <img src="assets/img/dependency-tree.jpg" style="width: 55%; margin: 0 auto -5%">
+
+    <span style="color: grey">*Dependency tree*</span>
+
+    ---
+
+    `bundle.js`
+
+    ```javascript
+    ({
+    "./a.js": function(module, exports, require) {
+        var b = require("./b.js");
+        var c = require("./c.js");
+    },
+    "./b.js": function(module, exports, require) {
+        ...
+    },
+    "./c.js": function(module, exports, require) {
+        ...
+    }})
+    ```
+
+    ---
+
+    But websites are more than just JavaScript:
+
+    - HTML
+    - CSS
+    - Fonts
+    - Images
+
+    What if we could treat some like regular modules?
+
+    ---
+
+    `Home.js`
+    ```javascript
+    var Home = View.extend({
+        template: require("./Home.html"),
+        styles: require("./Home.css")
+    });
+    ```
+
+    ---
+
+    `Home.html`
+    ```html
+    <div>
+        <h1>Home</h1>
+        <img src="assets/img/peerigon.svg">
+    </div>
+    ```
+
+    ---
+
+    `Home.css`
+    ```css
+    @import "reset.css";
+
+    @font-face {
+        font-family: 'Yanone Kaffeesatz';
+        src: url(assets/fonts/kaffeesatz.woff) format('opentype');
+    }
+
+    #home {
+        background-image: url(assets/img/peerigon.svg);
+    }
+    ```
+
+    ---
+
+    ### Bundlers
+
+    - Provide the possibility to include other files like HTML and CSS via transforms/loaders
+
+    ---
+
+    How does that work?
+
+    ---
+
+    The `html-loader` for example reads the required HTML file and generates this:
+
+    ```javascript
+    module.exports = "<div><h1>Home</h1><img src=\"" + __webpack_require__(6) + "\"></div>";
+    ```
+
+    All text files (JS, HTML, CSS, Less, Sass, etc.) are included as JS string into the bundle
+
+    ---
+
+    ... and what about binary data like the referenced image?
+
+    ---
+
+    The `file-loader` copies the referenced image to the output folder and creates a JS module
+    that returns the URL for that resource:
+
+    ```javascript
+    module.exports = __webpack_require__.p + "8f73676dc795be128a9bc94a2695e3be.svg"
+    ```
+
+    ---
+
+    ```javascript
+    module.exports = "<div><h1>Home</h1><img src=\"" + __webpack_require__(6) + "\"></div>";
+    ```
+
+    ```javascript
+    module.exports = __webpack_require__.p + "8f73676dc795be128a9bc94a2695e3be.svg"
+    ```
+
+    ---
+
+    Loaders/transforms can be chained in order to create powerful build chains
+
+    ```javascript
+    require("style-loader!css-loader!less-loader!./main.less");
+    ```
+
+    ---
+
+    ```javascript
+    require("style-loader!css-loader!less-loader!./main.less");
+    ```
+
+    - The `less-loader` compiles LESS to CSS and returns it
+    - The `css-loader` scans the CSS for referenced resources and generates a JS module which exports just a string
+    - The `style-loader` takes that string and appends it to the DOM as `style` tag
 
     ---
 
@@ -172,6 +407,8 @@
     ## Frontend management tomorrow?
 
     TODO @jhnns
+
+    - AST tools > DSL
 
     ---
 
