@@ -38,7 +38,7 @@
     ## Johannes
 
     - Co-Founder Peerigon GmbH
-    - Open Source enthusiast
+    - Open Source developer
     - Teaching JavaScript at the University of Applied Sciences Augsburg
 
     ---
@@ -61,9 +61,10 @@
 
     ## Agenda
 
-    - How we used to manage our frontend: 4 examples of legacy web projects
+    - How we used to manage our frontend: 3 examples of legacy web projects
     - Frontend management today
     - Optimizing page load time with Google PageSpeed
+    - Advanced frontend optimization
     - Frontend management tomorrow?
 
     ---
@@ -77,7 +78,7 @@
 
     ## How we used to manage our frontend
 
-    4 examples of legacy web projects
+    3 examples of legacy web projects
 
     ---
 
@@ -101,25 +102,6 @@
     - No real module system
     - [MooTools Packager](https://github.com/kamicane/packager) as build tool
     - Minified via [jsmin.php](https://github.com/rgrove/jsmin-php/)
-
-    ---
-
-    <img src="assets/img/roomieplanet-js-repos.jpg" style="width: 80%;">
-
-    - All JS code is split into 5 repositories each providing a `package.yaml`
-
-    ---
-
-    <img src="assets/img/roomieplanet-js-annotations.jpg" style="width: 90%;">
-
-    - Every JS file contains imports and exports
-
-    ---
-
-    <img src="assets/img/roomieplanet-js-builds.jpg" style="width: 80%;">
-
-    - `build.php` responsible for building (and caching) JS builds
-    - One file for common JS code + one file per page
 
     ---
 
@@ -150,12 +132,6 @@
     - Weird combination of CSS, LESS and SASS
     - Building of SASS files via Makefile
     - JS files included directly via templates<br>Combination of jQuery plugins, vendor files, global and site depending snippets
-
-    ---
-
-    ### example3.com
-
-    TODO @jhnns
 
     ---
 
@@ -491,6 +467,10 @@
 
     ---
 
+    ## Advanced frontend optimization
+
+    ---
+
     ## Frontend management tomorrow?
 
     ---
@@ -592,7 +572,28 @@
 
     ---
 
-    @TODO Add image of dependency tree with HTML, CSS and images
+    A dependency tree for each file:
+
+    <span style="color: grey">*index.html*</span>
+
+    ```javascript
+    {
+      "/css/app.css": {
+        "type": "style",
+        "weight": 1
+      },
+      "/js/app.js": {
+        "type": "script",
+        "weight": 1
+      },
+      "/elements.html": {
+        "type": "document",
+        "weight": 1
+      }
+    }
+    ```
+
+    <small>[Google's Push Manifest Proposal](https://github.com/GoogleChrome/http2-push-manifest)</small>
 
     ---
 
@@ -600,7 +601,7 @@
 
     --
 
-    - empirical analysis *("soon after delivering `index.html`, the same client also asked for `image.jpg`")*
+    - traffic analysis *("soon after delivering `index.html`, the same client also asked for `image.jpg`")*
 
     --
 
@@ -608,13 +609,12 @@
 
     ---
 
-    Proposal: Push Manifest
-
-    @TODO add example
-
-    ---
-
     ### ES2015 modules and `System.import()`
+
+    <small style="position: absolute; left: 30%; right: 30%; bottom: 20%; text-align: center">
+        Based on [Axel Rauschmayer's](http://www.2ality.com/2014/09/es6-modules-final.html)<br>
+        and [Jason Orendorff's](https://hacks.mozilla.org/2015/08/es6-in-depth-modules/) blog post
+    </small>
 
     ---
 
@@ -622,30 +622,28 @@
 
     ---
 
-    <span style="color: grey">*magicNumber.js*</span>
+    <span style="color: grey">*a.js*</span>
     ```javascript
-    let magicNumber = 42;
-    export default magicNumber;
+    export default 42;
     ```
 
     <span style="color: grey">*main.js*</span>
     ```javascript
-    import magicNumber from "./magicNumber.js";
+    import magicNumber from "./a.js";
     ```
 
     ---
 
     Looks almost like CommonJS, right?
 
-    <span style="color: grey">*magicNumber.js*</span>
+    <span style="color: grey">*a.js*</span>
     ```javascript
-    let magicNumber = 42;
-    module.exports = magicNumber;
+    module.exports = 42;
     ```
 
     <span style="color: grey">*main.js*</span>
     ```javascript
-    let magicNumber = require("./magicNumber.js");
+    let magicNumber = require("./a.js");
     ```
 
     ---
@@ -654,17 +652,17 @@
 
     ---
 
-    CommonJS resolves values...
+    CommonJS modules resolve exports/imports...
 
     - on runtime
-    - one-time
+    - as copy of the original value
 
     ---
 
-    ES2015 modules resolve values...
+    ES2015 modules resolve exports/imports...
 
     - on compilation
-    - live
+    - as live value
 
     ---
 
@@ -672,18 +670,18 @@
 
     .flex-ltr[
     ```javascript
-    let mylib;
+    let magicNumber;
     if (Math.random() < 0.5) {
-        mylib = require("foo");
+        magicNumber = require("./a.js");
     } else {
-        mylib = require("bar");
+        magicNumber = require("./b.js");
     }
     ```
     ```javascript
     if (Math.random() < 0.5) {
-        import myyLib from "foo";
+        import magicNumber from "./a.js";
     } else {
-        import myyLib from "bar";
+        import magicNumber from "./b.js";
     }
     // throws a SyntaxError
     ```
@@ -691,40 +689,248 @@
 
     ---
 
-    One-time vs. live
+    Copied value vs. live value
+
+    <span style="color: grey">*a.js*</span>
+    .flex-ltr[
+    ```javascript
+    exports.value = 42;
+    exports.incr = function () {
+        exports.value++;
+    }
+    ```
+    ```javascript
+    export let value = 42;
+    export function incr() {
+        value++;
+    }
+    ```
+    ]
+
+    <span style="color: grey">*main.js*</span>
 
     .flex-ltr[
     ```javascript
-    let mylib;
-    if (Math.random() < 0.5) {
-        mylib = require("foo");
-    } else {
-        mylib = require("bar");
-    }
+    let value = require("./a").value;
+    let incr = require("./a").incr;
+
+    incr();
+    console.log(value); // 42
     ```
     ```javascript
-    if (Math.random() < 0.5) {
-        import myyLib from "foo";
-    } else {
-        import myyLib from "bar";
-    }
-    // throws a SyntaxError
+    import { value, incr } from "./a.js";
+
+
+    incr();
+    console.log(value); // 43
     ```
     ]
 
     ---
 
-    What is the Loader spec?
+    ES2015 modules export *one-way bindings*,<br>
+    i.e. *immutable live connections* to values.
 
     ---
 
-    ### Web Components
+    Why is that important for frontend management?
+
+    ---
+
+    Since imports/exports are resolved on compilation, all required modules must be registered *before* code is actually executed.
+
+    ---
+
+    <img src="assets/img/sadpanda.jpg">
+
+    No AMD?<br>
+    No on-demand loading?<br>
+
+    ---
+
+    `System.import()` all the things!
+    <img src="assets/img/all-the-things.png" style="max-width: 100%;">
+
+    ---
+
+    ```javascript
+    System.import("some-module")
+        .then((someModule) => {
+            ...
+        })
+        .catch(error => {
+            ...
+        });
+    ```
+
+    ---
+
+    That looks almost like webpack's `require.ensure()`
+
+    ```javascript
+    require.ensure(["some-module"], (require) => {
+        let someModule = require("some-module");
+        // ...
+    });
+    ```
+
+    ---
+
+    Starting with webpack 2, `System.import()` creates a new chunk just like `require.ensure()`.
+
+    ---
+
+    **But**
+
+    Things aren't finalized yet.
+
+    ---
+
+    `System.import()` is very platform specific and many things need to be considered.
+
+    --
+
+    That's why it has been excluded from ES2015 and will be specified as separate ["Loader Standard"](https://github.com/whatwg/loader)
+
+    ---
+
+    At the same time, a draft for a [`<module>`](https://github.com/dherman/module-tag)-tag has been created.
+
+    ---
+
+    ```html
+    <module>
+    import app from "myapp";
+    </module>
+    ```
+
+    *same as*
+
+    ```html
+    <script>
+    System.import("myapp").then(function(app) {
+
+    });
+    </script>
+    ```
+
+    ---
+
+    ### And what about Web Components?
+
+    Aren't they supposed to solve similar problems?
+
+    <small style="position: absolute; left: 30%; right: 30%; bottom: 20%; text-align: center">Based on [Axel Rauschmayer's blog post](http://www.2ality.com/2015/08/web-component-status.html)</small>
+
+    ---
+
+    Yes and no.
+
+    ---
+
+    #### Shadow DOM
+
+    Encapsulates DOM nodes into sub trees that are unreachable with CSS selectors
+
+    --
+
+    <span style="color: green">*Solves a specific problem with selectors. A standard is on the way.*</span>
+
+    ---
+
+    #### HTML templates
+
+    Declare a portion of reusable markup that is parsed but not rendered until cloned.
+
+    --
+
+    <span style="color: green">*Not very complex and [already broadly supported](http://caniuse.com/#feat=template).*</span>
+
+    ---
+
+    #### Custom elements
+
+    An API for registering your own implementations for HTML elements.
+
+    --
+
+    <span style="color: darkorange">*The API is still in flux and details about the activation of custom elements are still unclear.*</span>
+
+    ---
+
+    #### HTML imports
+
+    Import other HTML documents into the current one. That way, HTML documents become bundles of HTML, CSS and JavaScript.<br>
+    <br>
+    HTML imports are required to actually distribute custom elements and all of their dependencies.
+
+    --
+
+    <span style="color: red">*Too much overlap with ES2015 module loading. Some argue that further work on HTML imports should wait until ES2015 module loading is finished.*</span>
 
     ---
 
     ## Conclusion
 
-    - AST tools > DSL
+    ---
+
+    Our tool set has become very complex over the recent years...
+
+    .flex-ltr[
+    <div><img src="assets/img/tools-task-runners.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-css.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-html.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-js.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-bundlers.jpg" style="width: 100%"></div>
+    ]
+
+    --
+
+    <br>
+
+    ...not to mention all the frameworks that bring their own way of doing things:
+
+    <img src="assets/img/frameworks.jpg" style="width: 40%">
+
+    ---
+
+    These tools, however, ease development...<br>
+    ...while allowing us to improve performance in production.
+
+    ---
+
+    **As a rule of thumb**
+
+    - Do not use these tools unless you actually need them
+
+    --
+
+    - Strive for the least abstraction from the original source
+
+    --
+
+    - Plugin-driven tools will serve you better than monolithic all-rounders
+
+    --
+
+    - AST-based tools are better than DSLs
+
+    ---
+
+    ### What about these upcoming web features?
+
+    ---
+
+    **HTTP2** invalidates some of our current performance best-practices (spriting, sharding, inlining),<br>
+    while others still apply (compressing, on-demand loading)
+
+    ---
+
+    **ES2015 modules** are ready to use with transpilers, but native support will still take some time.
+
+    ---
+
+    **Web components** provide some useful features like Shadow DOM. HTML imports, however, still remain vague.
 
     ---
 
