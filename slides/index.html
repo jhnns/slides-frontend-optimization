@@ -431,28 +431,43 @@
 
     ---
 
-    URL:       staging.devisio.net
-    Strategy:  mobile
-    Speed:     75
-    Usability: 100
+    ### Preface
 
-    CSS size                                   | 853 B
-    HTML size                                  | 636 B
-    JavaScript size                            | 218.32 kB
-    CSS resources                              | 1
-    Hosts                                      | 3
-    JS resources                               | 3
-    Resources                                  | 8
-    Static resources                           | 4
-    Other size                                 | 23.2 kB
-    Total size of request bytes sent           | 485 B
+    - What do we optimize for?
+    - What are the measurements?
 
-    Minimize render blocking resources         | 24
-    Prioritize visible content                 | 8
+    TODO
 
     ---
 
-    ### Rules
+    ### Page speed summary
+
+    - Insights (web service)<br><a href="https://developers.google.com/speed/pagespeed/insights/">https://developers.google.com/speed/pagespeed/insights/</a>
+    - Server package for apache and nginx
+
+    ---
+
+    ### Insight example
+
+        URL:       staging.devisio.net
+        Strategy:  mobile
+        Speed:     75
+        Usability: 100
+
+        CSS size                                   | 853 B
+        HTML size                                  | 636 B
+        JavaScript size                            | 218.32 kB
+        CSS resources                              | 1
+        Hosts                                      | 3
+        JS resources                               | 3
+        Resources                                  | 8
+        Static resources                           | 4
+        Other size                                 | 23.2 kB
+        Total size of request bytes sent           | 485 B
+
+    ---
+
+    ### Insight rules
 
     - Compression
     - Caching
@@ -464,6 +479,12 @@
 
     ---
 
+    ### Google chrome web developer tools
+
+    TODO screenshot of loading graph
+
+    ---
+
     ### Async JavaScript and CSS loading
 
     - script.js
@@ -472,6 +493,25 @@
     ---
 
     ## Advanced frontend optimization
+
+    ---
+
+    ### Server bundle or do it yourself
+
+    TODO nginx: cache, gzip
+
+    ---
+
+    ### Summary and limits of Google PageSpeed
+
+    - does not adopt to your specific optimization goals
+    - does not consider all aspects, but a good point to start
+    - 100 points might not be the best result
+
+    TODO
+
+    - TODO other tools
+
 
     ---
 
