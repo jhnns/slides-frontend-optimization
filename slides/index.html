@@ -311,7 +311,7 @@
     - Fonts
     - Images
 
-    What if we could treat some like regular modules?
+    What if we could treat them like regular modules?
 
     ---
 
@@ -322,6 +322,7 @@
         styles: require("./Home.css")
     });
     ```
+    `Home.js` requires `Home.html` and `Home.css`
 
     ---
 
@@ -332,6 +333,7 @@
         <img src="assets/img/peerigon.svg">
     </div>
     ```
+    `Home.html` requires `peerigon.svg`
 
     ---
 
@@ -348,6 +350,7 @@
         background-image: url(assets/img/peerigon.svg);
     }
     ```
+    `Home.css` requires `reset.css`, `kaffeesatz.woff` and `peerigon.svg`
 
     ---
 
@@ -407,8 +410,38 @@
     ```
 
     - The `less-loader` compiles LESS to CSS and returns it
-    - The `css-loader` scans the CSS for referenced resources and generates a JS module which exports just a string
+
+    --
+
+    - The `css-loader` traverses the CSS AST for referenced resources and generates a JS module which exports the CSS as string
+
+    --
+
     - The `style-loader` takes that string and appends it to the DOM as `style` tag
+
+    ---
+
+    Thus, bundlers are *intelligent* build tools that allow us to hook-in custom functionality based on ASTs
+
+    ---
+
+    ### So, why do we use all these tools?
+
+    .flex-ltr[
+    <div><img src="assets/img/tools-task-runners.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-css.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-html.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-js.jpg" style="width: 100%"></div>
+    <div><img src="assets/img/tools-bundlers.jpg" style="width: 100%"></div>
+    ]
+
+    ---
+
+    We want to ease development...
+
+    --
+
+    ...while maintaining the best performance in production.
 
     ---
 
@@ -418,26 +451,24 @@
 
     ---
 
-        URL:       staging.devisio.net
-        Strategy:  mobile
-        Speed:     75
-        Usability: 100
+    URL:       staging.devisio.net
+    Strategy:  mobile
+    Speed:     75
+    Usability: 100
 
-        CSS size                                   | 853 B
-        HTML size                                  | 636 B
-        JavaScript size                            | 218.32 kB
-        CSS resources                              | 1
-        Hosts                                      | 3
-        JS resources                               | 3
-        Resources                                  | 8
-        Static resources                           | 4
-        Other size                                 | 23.2 kB
-        Total size of request bytes sent           | 485 B
+    CSS size                                   | 853 B
+    HTML size                                  | 636 B
+    JavaScript size                            | 218.32 kB
+    CSS resources                              | 1
+    Hosts                                      | 3
+    JS resources                               | 3
+    Resources                                  | 8
+    Static resources                           | 4
+    Other size                                 | 23.2 kB
+    Total size of request bytes sent           | 485 B
 
-        Minimize render blocking resources         | 24
-        Prioritize visible content                 | 8
-
-        --------------------------------------------------------
+    Minimize render blocking resources         | 24
+    Prioritize visible content                 | 8
 
     ---
 
@@ -456,13 +487,242 @@
     ### Async JavaScript and CSS loading
 
     - script.js
-    - load css with different media, e.g. ```only x```
+    - load css with different media, e.g. `only x`
 
     ---
 
     ## Frontend management tomorrow?
 
-    TODO @jhnns
+    ---
+
+    These web features will change the way we build web apps:
+
+    - HTTP2
+    - ES2015 modules and `System.import()`
+    - Web Components
+
+    ---
+
+    ### HTTP2
+
+    <small style="position: absolute; left: 30%; right: 30%; bottom: 20%; text-align: center">Based on [Ilya Grigorik's talk at Velocity 2015](https://www.youtube.com/watch?v=yURLTwZ3ehk)</small>
+
+    ---
+
+    Problems with HTTP1:
+
+    - <span style="color: red">Limited parallelism</span>
+        - Parallelism is limited by number of connections
+
+    <img src="assets/img/http2-parallelism-1.jpg" style="width: 90%">
+
+    ---
+
+    Problems with HTTP1:
+
+    - <span style="color: red">Head-of-line blocking</span>
+        - Request queuing and delayed request dispatch on the client
+        - Strict response ordering on the server
+
+    @TODO image
+
+    ---
+
+    Problems with HTTP1:
+
+    - <span style="color: red">High protocol overhead</span>
+        - Since requests should be stateless, all headers are re-sent again and again
+        - Headers can not be compressed
+
+    ---
+
+    Features in HTTP2:
+
+    - <span style="color: green">Parallelism by multiplexing</span>
+
+    ---
+
+    HTTP2 is a binary protocol
+
+    <img src="assets/img/http2-parallelism-2.jpg" style="width: 40%">
+
+    ---
+
+    Frames can be interleaved on a single TCP connection
+
+    <img src="assets/img/http2-parallelism-3.jpg" style="width: 70%">
+
+    ---
+
+    Yields to more efficient use of bandwidth
+
+    <img src="assets/img/http2-parallelism-4.jpg" style="width: 60%">
+
+    <small>[Source: HTTP/2 101 Chrome Dev Summit 2015](https://www.youtube.com/watch?v=r5oT_2ndjms)</small>
+
+    ---
+
+    Features in HTTP2:
+
+    - <span style="color: green">Parallelism by multiplexing</span>
+    - <span style="color: green">Response prioritization</span>
+    - <span style="color: green">Header compression</span>
+
+    --
+
+    - <span style="color: green">Server push</span>
+
+    ---
+
+    Server push
+
+    <img src="assets/img/http2-push.jpg" style="width: 100%">
+
+    ---
+
+    Server push is equivalent to "inlining", except...
+
+    --
+
+    ...it delivers granular resources which can be cached and prioritized individually.
+
+    ---
+
+    What do we need to provide server push?
+
+    ---
+
+    @TODO Add image of dependency tree with HTML, CSS and images
+
+    ---
+
+    This can be accomplished by...
+
+    --
+
+    - empirical analysis *("soon after delivering `index.html`, the same client also asked for `image.jpg`")*
+
+    --
+
+    - tools like bundlers which figure out the dependency tree
+
+    ---
+
+    Proposal: Push Manifest
+
+    @TODO add example
+
+    ---
+
+    ### ES2015 modules and `System.import()`
+
+    ---
+
+    What are ES2015 modules?
+
+    ---
+
+    <span style="color: grey">*magicNumber.js*</span>
+    ```javascript
+    let magicNumber = 42;
+    export default magicNumber;
+    ```
+
+    <span style="color: grey">*main.js*</span>
+    ```javascript
+    import magicNumber from "./magicNumber.js";
+    ```
+
+    ---
+
+    Looks almost like CommonJS, right?
+
+    <span style="color: grey">*magicNumber.js*</span>
+    ```javascript
+    let magicNumber = 42;
+    module.exports = magicNumber;
+    ```
+
+    <span style="color: grey">*main.js*</span>
+    ```javascript
+    let magicNumber = require("./magicNumber.js");
+    ```
+
+    ---
+
+    Nope.
+
+    ---
+
+    CommonJS resolves values...
+
+    - on runtime
+    - one-time
+
+    ---
+
+    ES2015 modules resolve values...
+
+    - on compilation
+    - live
+
+    ---
+
+    On runtime vs. on compilation
+
+    .flex-ltr[
+    ```javascript
+    let mylib;
+    if (Math.random() < 0.5) {
+        mylib = require("foo");
+    } else {
+        mylib = require("bar");
+    }
+    ```
+    ```javascript
+    if (Math.random() < 0.5) {
+        import myyLib from "foo";
+    } else {
+        import myyLib from "bar";
+    }
+    // throws a SyntaxError
+    ```
+    ]
+
+    ---
+
+    One-time vs. live
+
+    .flex-ltr[
+    ```javascript
+    let mylib;
+    if (Math.random() < 0.5) {
+        mylib = require("foo");
+    } else {
+        mylib = require("bar");
+    }
+    ```
+    ```javascript
+    if (Math.random() < 0.5) {
+        import myyLib from "foo";
+    } else {
+        import myyLib from "bar";
+    }
+    // throws a SyntaxError
+    ```
+    ]
+
+    ---
+
+    What is the Loader spec?
+
+    ---
+
+    ### Web Components
+
+    ---
+
+    ## Conclusion
 
     - AST tools > DSL
 
