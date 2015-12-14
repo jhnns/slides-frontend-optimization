@@ -19,7 +19,7 @@
     .small[@jhnns / johannes.ewald@peerigon.com]<br>
     <br>
     Richard Stromer<br>
-    @noxan
+    .small[@noxannet / hello@noxan.net]<br>
     ]
 
     ---
@@ -55,10 +55,8 @@
 
     ## Richard
 
-    - Slide
-    - about
-    - Richard
-
+    - Freelance software developer
+    - Focus on web applications<br>(Django, AngularJS and NodeJS)
     ---
 
     ## Agenda
@@ -140,9 +138,18 @@
 
     ---
 
-    ### example2.com
+    ### moonid.net
 
-    TODO @noxan
+    <img src="assets/img/moonid-screenshot.jpg" style="width: 80%;">
+
+    ---
+
+    - Classic Django website (Server side rendering)
+    - Staticfiles (JS, CSS, Images...) managed by Django
+    - Contains 23 JS files
+    - Weird combination of CSS, LESS and SASS
+    - Building of SASS files via Makefile
+    - JS files included directly via templates<br>Combination of jQuery plugins, vendor files, global and site depending snippets
 
     ---
 
@@ -152,7 +159,14 @@
 
     ---
 
-    ### example4.com
+    ### mybraintraining.com
+
+    - Django compressor
+    - Build process for SASS and CoffeeScript
+    - Template as entry point with TemplateTag
+    - Minified JavaScript, but vendor files extra, feature specific snippets
+    - Combined CSS files, including vendor, but not minified
+    - Increasing percentage of JavaScript vs. Python, loading of graph data and modals via AJAX
 
     TODO @noxan
 
@@ -404,6 +418,48 @@
 
     ---
 
+        URL:       staging.devisio.net
+        Strategy:  mobile
+        Speed:     75
+        Usability: 100
+
+        CSS size                                   | 853 B
+        HTML size                                  | 636 B
+        JavaScript size                            | 218.32 kB
+        CSS resources                              | 1
+        Hosts                                      | 3
+        JS resources                               | 3
+        Resources                                  | 8
+        Static resources                           | 4
+        Other size                                 | 23.2 kB
+        Total size of request bytes sent           | 485 B
+
+        Minimize render blocking resources         | 24
+        Prioritize visible content                 | 8
+
+        --------------------------------------------------------
+
+    ---
+
+    ### Rules
+
+    - Compression
+    - Caching
+    - Minify and optimize size (HTML, JS, CSS, Images)
+    - Avoid redirects on landing pages
+    - Server response time
+    - Prioritize visible content
+    - Async JS and CSS loading (non render-blocking)
+
+    ---
+
+    ### Async JavaScript and CSS loading
+
+    - script.js
+    - load css with different media, e.g. ```only x```
+
+    ---
+
     ## Frontend management tomorrow?
 
     TODO @jhnns
@@ -419,7 +475,8 @@
     johannes.ewald@peerigon.com<br>
     <br>
     Richard Stromer<br>
-    @noxan
+    @noxannet<br>
+    hello@noxan.net
 
 </textarea>
 <script src="bower_components/remark/out/remark.js" type="text/javascript">
