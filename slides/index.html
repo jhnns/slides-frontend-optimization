@@ -57,6 +57,7 @@
 
     - Freelance software developer
     - Focus on web applications<br>(Django, AngularJS and NodeJS)
+
     ---
 
     ## Agenda
@@ -126,11 +127,13 @@
 
     ---
 
+    <img src="assets/img/moonid-codegraph.jpg" style="width: 80%;">
+
     - Classic Django website (Server side rendering)
     - Staticfiles (JS, CSS, Images...) managed by Django
-    - Contains 23 JS files
-    - Weird combination of CSS, LESS and SASS
+    - Contains 23 JS files (rather snippets)
     - Building of SASS files via Makefile
+    - Combination of CSS vendor files and SASS
     - JS files included directly via templates<br>Combination of jQuery plugins, vendor files, global and site depending snippets
 
     ---
@@ -141,14 +144,59 @@
 
     ---
 
-    - Django compressor
-    - Build process for SASS and CoffeeScript
-    - Template as entry point with TemplateTag
-    - Minified JavaScript, but vendor files extra, feature specific snippets
-    - Combined CSS files, including vendor, but not minified
-    - Increasing percentage of JavaScript vs. Python, loading of graph data and modals via AJAX
+    <img src="assets/img/mybraintraining-codegraph.jpg" style="width: 80%;">
 
-    TODO @noxan
+    - Django compressor
+        - Concatenate
+        - Minify
+        - Preprocessors
+
+    - Integrated build process for SASS and CoffeeScript
+    - Template as entry point with TemplateTags
+    - Lacks of handling for vendor files
+    - Just partial optimizations
+    - Increasing percentage of JavaScript
+    - Unified JavaScript for application, vendor dedicated
+
+    ---
+
+    ### Code examples
+
+    ```html
+    <link href='http://fonts.googleapis.com/css?family=Dosis:400,600|Marck+Script' rel='stylesheet' type='text/css'>
+    {% block meta %}{% endblock %}
+    {% compress css %}
+    <link rel="stylesheet" href="{{STATIC_URL}}sass/styles.sass" type="text/x-sass">
+    {% endcompress %}
+    <script src="{{STATIC_URL}}javascripts/vendor/custom.modernizr.js"></script>
+    {% block resources %}{% endblock %}
+    {% render_block "css" %}
+    ```
+
+    ---
+
+    #### Code examples
+
+    ```html
+    <script src='{{STATIC_URL}}javascripts/vendor/jquery.js'></script>
+    <script src="{{STATIC_URL}}javascripts/foundation/foundation.js"></script>
+    <script src="{{STATIC_URL}}javascripts/foundation/foundation.orbit.js"></script>
+    <script src="{{STATIC_URL}}javascripts/foundation/foundation.reveal.js"></script>
+    <script src="{{STATIC_URL}}javascripts/foundation/foundation.tooltips.js"></script>
+    <script src="{{STATIC_URL}}javascripts/foundation/foundation.forms.js"></script>
+    {% render_block "js" %}
+    {% block javascript %}{% endblock %}
+    {% compress js %}
+    <script src="{{STATIC_URL}}coffee/tabs.coffee" type="text/coffeescript" charset="utf-8"/>
+    {% block extra_coffee %}{% endblock %}
+    {% endcompress %}
+    <script type="text/javascript">
+        $(document).foundation();
+    </script>
+    <script type="text/javascript">
+    {% block analytics %}{% endblock %}
+    </script>
+    ```
 
     ---
 
@@ -431,43 +479,72 @@
 
     ---
 
-    ### Preface
+    ### Why website speed optimization?
 
-    - What do we optimize for?
-    - What are the measurements?
+    - Loading takes too long
+    - User may ask: Is the site down?
+    - User may try another site meanwhile
+    - In general bad user experience
+    - User may not want to return
 
-    TODO
-
-    ---
-
-    ### Page speed summary
-
-    - Insights (web service)<br><a href="https://developers.google.com/speed/pagespeed/insights/">https://developers.google.com/speed/pagespeed/insights/</a>
-    - Server package for apache and nginx
+    - Not just initial load, also reload or navigation
 
     ---
 
-    ### Insight example
+    ### Loaded does not require complete load
 
-        URL:       staging.devisio.net
-        Strategy:  mobile
-        Speed:     75
-        Usability: 100
+    - Loading of website split in requests
+    - Not all need to finish to start rendering
 
-        CSS size                                   | 853 B
-        HTML size                                  | 636 B
-        JavaScript size                            | 218.32 kB
-        CSS resources                              | 1
-        Hosts                                      | 3
-        JS resources                               | 3
-        Resources                                  | 8
-        Static resources                           | 4
-        Other size                                 | 23.2 kB
-        Total size of request bytes sent           | 485 B
+    - Render blocking content
+    - Above the fold content
+
+    - Different kinds of content:
+        - HTML
+        - JavaScript
+        - Stylesheets
+        - Images and other media
+
+    ---
+    
+    ### What is Google PageSpeed
+
+    Part of the “Make the Web Faster”
+
+    - PageSpeed Insights: Analyze tool
+    - PageSpeed Modules: Server modules for Apache / nginx
+    - (Infrastructure)
+    - Best practices, standards and resources
 
     ---
 
-    ### Insight rules
+    ### PageSpeed Insights
+
+        URL: m.youtube.com        Strategy: Mobile         Speed: 48       Usability: 100
+
+        CSS size                                   | 151.1 kB
+        HTML size                                  | 141.37 kB
+        Image size                                 | 300.99 kB
+        JavaScript size                            | 1.18 MB
+        CSS resources                              | 2
+        Hosts                                      | 9
+        JS resources                               | 6
+        Resources                                  | 45
+        Static resources                           | 35
+        Other size                                 | 39.48 kB
+        Total size of request bytes sent           | 5.05 kB
+
+        Avoid landing page redirects               | 33.5
+        Leverage browser caching                   | 14.11
+        Minify JavaScript                          | 0.35
+        Minimize render blocking resources         | 64
+        Prioritize visible content                 | 8
+
+    <a href="https://developers.google.com/speed/pagespeed/insights/">https://developers.google.com/speed/pagespeed/insights/</a>
+
+    ---
+
+    ### Insights - Important rules
 
     - Compression
     - Caching
@@ -481,37 +558,146 @@
 
     ### Google chrome web developer tools
 
-    TODO screenshot of loading graph
+    <img src="assets/img/developer-tools-network-youtubecom.jpg" style="width: 70%;">
 
     ---
 
-    ### Async JavaScript and CSS loading
+    ### Speed optimization - Examples
 
-    - script.js
-    - load css with different media, e.g. `only x`
+    - Configure your server or use PageSpeed modules
+        - Turn on gzip
+        - Caching
+        - ...
+    - Concatenate and minify them all (can be done by server)
+    - ...
+    - Some more interesting examples
+
+    <a href="http://www.noxan.net/webapp-playground/#/">http://www.noxan.net/webapp-playground/#/</a>
 
     ---
 
-    ## Advanced frontend optimization
+    ### Example: Server bundle or do it yourself
+
+    ```
+    # Cache settings
+    expires max;
+
+    # Gzip settings
+    gzip on;
+    gzip_disable "msie6";
+
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    # gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml 
+        application/xml+rss text/javascript application/x-javascript image/svg+xml;
+    ```
 
     ---
 
-    ### Server bundle or do it yourself
+    ### Example: Inline important JavaScript and CSS
 
-    TODO nginx: cache, gzip
+    ```html
+    <html>
+      <head>
+        <script type="text/javascript" src="small.js"></script>
+      </head>
+      <body>
+        <div>
+          Hello, world!
+        </div>
+      </body>
+    </html>
+    ```
+
+    ```javascript
+    /* contents of a small JavaScript file */
+    ```
+
+    <a href="https://developers.google.com/speed/docs/insights/BlockingJS">developers.google.com/speed/docs/insights/BlockingJS</a>
+
+    ---
+
+    ### Example: Inline important JavaScript and 
+
+    ```html
+    <html>
+      <head>
+        <script type="text/javascript">
+          /* contents of a small JavaScript file */
+        </script>
+      </head>
+      <body>
+        <div>
+          Hello, world!
+        </div>
+      </body>
+    </html>
+    ```
+
+    <a href="https://developers.google.com/speed/docs/insights/BlockingJS">developers.google.com/speed/docs/insights/BlockingJS</a>
+
+    ---
+
+    ### Example: Async JavaScript
+
+    script.js loader
+
+    ```javascript
+    var $script = require('script.min.js');
+    $script([
+        'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js',
+        ...
+        'app.js'
+    ], function () {
+        // loading done
+    });
+    ```
+
+    ---
+
+    ### Example: Async CSS
+
+    load css with different media, e.g. `only x`
+
+    ```javascript
+    var $css = function (cssList) {
+        var head = document.getElementsByTagName('head')[0];
+        cssList.forEach(function (cssHref) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = cssHref;
+            link.media = 'only x';
+            head.parentNode.insertBefore(link, head);
+
+            setTimeout(function () {
+                link.media = "all";
+            });
+        });
+    };
+    ```
 
     ---
 
     ### Summary and limits of Google PageSpeed
 
+    - 100 points is nice to show but is not all
     - does not adopt to your specific optimization goals
-    - does not consider all aspects, but a good point to start
-    - 100 points might not be the best result
+    - does not consider all aspects
+    - effort in optimization is way higher than the benefit
 
-    TODO
+    summary: a good tool to start with
 
-    - TODO other tools
+    ---
 
+    ### Futher reading
+
+    - https://kinsta.com/learn/page-speed/
+    - https://developers.google.com/speed/docs/insights/
+    - https://developers.google.com/web/tools/starter-kit/
+    - https://www.clickz.com/clickz/column/2097323/website-loses-potential-conversions
 
     ---
 
